@@ -1,27 +1,27 @@
 import apiClient from "./apiClient.js"
 
-const makeLoginReq = async (credentials) => {
+export const loginUser = async (credentials) => {
     const response = await apiClient.post(
-        "/v1/users/login",
-        credentials
-    )
-    return response
-}
-
-const makeRegisterReq = async (userDetails) => {
-    const response = await apiClient.post(
-        "/v1/users/register",
-        userDetails,
+        "/api/v1/auth/login",
+        credentials,
         {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "application/json"
             }
         }
     )
     return response
 }
 
-export {
-    makeLoginReq,
-    makeRegisterReq
+export const registerUser = async (userDetails) => {
+    const response = await apiClient.post(
+        "api/v1/auth/register",
+        userDetails,
+        {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    )
+    return response
 }

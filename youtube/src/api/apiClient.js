@@ -3,8 +3,8 @@ import axios from "axios"
 // creating a reusable axios instance
 // we will not hardcode the content-type, because different req can have different content-type
 const apiClient = axios.create({
-    baseURL: "http://localhost:8000/api",
-    timeout: 300000,  // this is time in ms and this means that if the server will not respond in 5 min then the client can show a user friendly error mssg, that will reduce the long-hanging req's when there is high network traffics or high load on server.
+    baseURL: import.meta.env.VITE_API_BASE_URL,
+    timeout: 10000,  // this is time in ms and this means that if the server will not respond in 10 sec then the client can show a user friendly error mssg, that will reduce the long-hanging req's when there is high network traffics or high load on server.
     withCredentials: true
 })
 
