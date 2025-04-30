@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom"
 import { DESKTOP_NAVBAR_CONFIG } from "../../../config/desktop/desktopNavbarConfig.js"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import getTheme from "../../../services/theme/getTheme.js" 
 import { NAVBAR } from "../../../constants/styles/constants.js"
 
 const DesktopNavbar = () => {
     const [authState, setAuthState] = useState(true)
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
     const [search, setSearch] = useState("")
-    const inputRef = useRef()
+    
+    const inputRef = useRef(null)
+    const profileRef = useRef(null)
+    const profileButtonRef = useRef(null)
+
     const theme = getTheme()
     
     const searchBarHeight = "43px"
@@ -62,10 +67,11 @@ const DesktopNavbar = () => {
             return DESKTOP_NAVBAR_CONFIG.authenticated.buttons.map((button) => {
                 return (
                     <button
+                    ref={button.id === "profile" ? profileButtonRef : null}
                     key={button.id}
                     id={button.id}
                     className={button.className}
-                    onClick={button.action}>
+                    onClick={() => handleNavbarButtonClick(button.action)}>
                         { 
                             button.id === "profile"
                             ? (
@@ -107,31 +113,70 @@ const DesktopNavbar = () => {
         }
     }
 
+    const handleNavbarButtonClick = (action) => {
+        if(action === "TOGGLE_USER_MENU_STATE") {
+            setIsUserMenuOpen(prev => !prev)
+        }
+    }
+
+    useEffect(() => {
+        console.log("userMenuState:", isUserMenuOpen)
+    }, [isUserMenuOpen])
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if(
+                profileRef.current && 
+                !profileRef.current.contains(event.target) &&
+                (!profileButtonRef.current || !profileButtonRef.current.contains(event.target))
+            ) {
+                setIsUserMenuOpen(false)
+            }
+        }
+      
+        document.addEventListener("mousedown", handleClickOutside)
+      
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside)
+        }
+      }, [])
+
     return (
-        <div 
-        className={`
-        relstive pr-2
-        w-[${NAVBAR.weight}] h-[${NAVBAR.height}]
-        flex items-center justify-between
-        ${theme === "light" ? "bg-white" : "bg-black"}`}>
-            <Link
-            to={DESKTOP_NAVBAR_CONFIG.logo.link}>
-                <img
-                src={theme === "light" ? DESKTOP_NAVBAR_CONFIG.logo.light : DESKTOP_NAVBAR_CONFIG.logo.dark}
-                className="size-[6rem]"
-                alt={DESKTOP_NAVBAR_CONFIG.logo.alt} />
-            </Link>
-            <div>
-                {
-                    renderSearchBar()
-                }
+        <>
+            {
+                isUserMenuOpen && (
+                    <div 
+                    ref={profileRef}
+                    className="absolute top-[65px] right-2 w-[350px] h-[650px] rounded-3xl bg-red-400">
+                    </div>
+                )
+            }
+
+            <div 
+            className={`
+            relstive px-1
+            w-[${NAVBAR.width}] h-[${NAVBAR.height}]
+            flex items-center justify-between
+            ${theme === "light" ? "bg-white" : "bg-black"}`}>
+                <Link
+                to={DESKTOP_NAVBAR_CONFIG.logo.link}>
+                    <img
+                    src={theme === "light" ? DESKTOP_NAVBAR_CONFIG.logo.light : DESKTOP_NAVBAR_CONFIG.logo.dark}
+                    className="size-[6rem]"
+                    alt={DESKTOP_NAVBAR_CONFIG.logo.alt} />
+                </Link>
+                <div>
+                    {
+                        renderSearchBar()
+                    }
+                </div>
+                <div className="h-full flex items-center gap-5">
+                    {
+                        renderNavbarButtons()
+                    }
+                </div>
             </div>
-            <div className="h-full flex items-center gap-5">
-                {
-                    renderNavbarButtons()
-                }
-            </div>
-        </div>
+        </>
     )
 }
 
