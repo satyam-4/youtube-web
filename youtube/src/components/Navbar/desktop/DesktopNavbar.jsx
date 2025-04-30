@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom"
 import { DESKTOP_NAVBAR_CONFIG } from "../../../config/desktop/desktopNavbarConfig.js"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import getTheme from "../../../services/theme/getTheme.js" 
 import { NAVBAR } from "../../../constants/styles/constants.js"
+import { createHandlers } from "../../../utils/handlers/navbarHandlers.js"
 
 const DesktopNavbar = () => {
     const [authState, setAuthState] = useState(true)
-    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+    const [isProfileOpen, setIsProfileOpen] = useState(false)
     const [search, setSearch] = useState("")
     
     const inputRef = useRef(null)
@@ -115,36 +116,50 @@ const DesktopNavbar = () => {
 
     const handleNavbarButtonClick = (action) => {
         if(action === "TOGGLE_USER_MENU_STATE") {
-            setIsUserMenuOpen(prev => !prev)
+            setIsProfileOpen(prev => !prev)
         }
     }
-
-    useEffect(() => {
-        console.log("userMenuState:", isUserMenuOpen)
-    }, [isUserMenuOpen])
+    
+    const handlers = useMemo(() => {
+        return createHandlers(setIsProfileOpen, profileRef)
+    }, [isProfileOpen, profileRef])
 
     useEffect(() => {
         function handleClickOutside(event) {
-            if(
+            if (
                 profileRef.current && 
                 !profileRef.current.contains(event.target) &&
                 (!profileButtonRef.current || !profileButtonRef.current.contains(event.target))
             ) {
-                setIsUserMenuOpen(false)
+                setIsProfileOpen(false);
             }
         }
-      
-        document.addEventListener("mousedown", handleClickOutside)
-      
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside)
+
+        if(isProfileOpen) {
+            console.log("Listeners added")
+            document.addEventListener("wheel", handlers.disableScrollByWheelAndTouch, { passive: false })
+            document.addEventListener("touchmove", handlers.disableScrollByWheelAndTouch, { passive: false })
+            document.addEventListener("keydown", handlers.disableScrollByKeys)
+            document.addEventListener("keydown", handlers.handleKeyDown)
+            document.addEventListener("mousedown", handleClickOutside)
         }
-      }, [])
+
+        return () => {
+            console.log("Listeners removed")
+            document.removeEventListener("wheel", handlers.disableScrollByWheelAndTouch)
+            document.removeEventListener("touchmove", handlers.disableScrollByWheelAndTouch)
+            document.removeEventListener("keydown", handlers.disableScrollByKeys)
+            document.removeEventListener("keydown", handlers.handleKeyDown)
+            document.removeEventListener("mousedown", handleClickOutside)
+
+            profileButtonRef.current?.blur()
+        }
+      }, [isProfileOpen, handlers])
 
     return (
         <>
             {
-                isUserMenuOpen && (
+                isProfileOpen && (
                     <div 
                     ref={profileRef}
                     className="absolute top-[65px] right-2 w-[350px] h-[650px] rounded-3xl bg-red-400">
