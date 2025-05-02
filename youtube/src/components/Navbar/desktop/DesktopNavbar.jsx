@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom"
 import { DESKTOP_NAVBAR_CONFIG } from "../../../config/desktop/desktopNavbarConfig.js"
 import { useEffect, useMemo, useRef, useState } from "react"
-import getTheme from "../../../services/theme/getTheme.js" 
 import { NAVBAR } from "../../../constants/styles/constants.js"
 import { createHandlers } from "../../../utils/handlers/navbarHandlers.js"
+import ProfileMenu from "../../popups/ProfileMenu.jsx"
+import { useTheme } from "../../../contexts/ThemeContext.jsx"
 
 const DesktopNavbar = () => {
     const [authState, setAuthState] = useState(true)
@@ -14,7 +15,7 @@ const DesktopNavbar = () => {
     const profileRef = useRef(null)
     const profileButtonRef = useRef(null)
 
-    const theme = getTheme()
+    const { theme } = useTheme()
     
     const searchBarHeight = "43px"
 
@@ -33,7 +34,7 @@ const DesktopNavbar = () => {
                 value={search}
                 type={DESKTOP_NAVBAR_CONFIG.searchbar.searchInput.type}
                 placeholder={DESKTOP_NAVBAR_CONFIG.searchbar.searchInput.placeholder}
-                className={DESKTOP_NAVBAR_CONFIG.searchbar.searchInput.className} />
+                className={`${DESKTOP_NAVBAR_CONFIG.searchbar.searchInput.className} ${theme === "light" ? "bg-white" : "bg-dark"}`} />
                 {
                     search && (
                         <button
@@ -54,7 +55,7 @@ const DesktopNavbar = () => {
                 </button>
             </div>
             <button
-            className={DESKTOP_NAVBAR_CONFIG.searchbar.buttons.mic.className}
+            className={`${DESKTOP_NAVBAR_CONFIG.searchbar.buttons.mic.className} ${theme === "light" ? 'bg-[#dad9d982] hover:bg-[#dad9d9]' : 'bg-[#39393982] hover:bg-[#393939c7]'}`}
             onClick={DESKTOP_NAVBAR_CONFIG.searchbar.buttons.mic.action()}>
                 {
                     DESKTOP_NAVBAR_CONFIG.searchbar.buttons.mic.icon()
@@ -71,7 +72,11 @@ const DesktopNavbar = () => {
                     ref={button.id === "profile" ? profileButtonRef : null}
                     key={button.id}
                     id={button.id}
-                    className={button.className}
+                    className={
+                        button.id === "create"
+                        ? `${button.className} ${theme === "light" ? 'bg-[#dad9d982] hover:bg-[#dad9d9]' : 'bg-[#39393982] hover:bg-[#393939c7]'}`
+                        : `${button.className}`
+                    }
                     onClick={() => handleNavbarButtonClick(button.action)}>
                         { 
                             button.id === "profile"
@@ -160,19 +165,17 @@ const DesktopNavbar = () => {
         <>
             {
                 isProfileOpen && (
-                    <div 
+                    <ProfileMenu 
                     ref={profileRef}
-                    className="absolute top-[65px] right-2 w-[350px] h-[650px] rounded-3xl bg-red-400">
-                    </div>
+                    />
                 )
             }
 
             <div 
             className={`
-            relstive px-1
+            relative px-1
             w-[${NAVBAR.width}] h-[${NAVBAR.height}]
-            flex items-center justify-between
-            ${theme === "light" ? "bg-white" : "bg-black"}`}>
+            flex items-center justify-between`}>
                 <Link
                 to={DESKTOP_NAVBAR_CONFIG.logo.link}>
                     <img
