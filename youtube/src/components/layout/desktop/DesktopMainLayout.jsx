@@ -3,15 +3,19 @@ import { Outlet } from "react-router-dom"
 import ExpandedSidebar from "../../sidebars/web/ExpandedSidebar.jsx"
 import CollapsedSidebar from "../../sidebars/web/CollapsedSidebar.jsx"
 import { COLLAPSED_SIDEBAR, EXPANDED_SIDEBAR, NAVBAR } from "../../../constants/styles/constants.js"
-import { useTheme } from "../../../contexts/ThemeContext.jsx"
+import { useTheme } from "@contexts/ThemeContext.jsx"
+import { useSidebar } from "@contexts/SidebarContext.jsx"
 
 const DesktopMainLayout = () => {
     const { theme } = useTheme()
+    const { isExpanded } = useSidebar()
+
     const themeClass = theme === "light" ? 'bg-white text-black' : 'bg-black text-white'
+    console.log("sidebar state:", isExpanded)
     return (
         <div className={`${theme === "light" ? 'bg-white text-black' : 'bg-black text-white'} relative flex h-screen`}>
             {
-                isSidebarExpanded === true
+                isExpanded
                 ? (
                     <div 
                     style={{ width: EXPANDED_SIDEBAR.width }}
@@ -36,8 +40,8 @@ const DesktopMainLayout = () => {
               </div>
               <div 
               style={{ 
-                width: `calc(100% - ${isSidebarExpanded ? EXPANDED_SIDEBAR.width : COLLAPSED_SIDEBAR.width})`,
-                left: isSidebarExpanded ? EXPANDED_SIDEBAR.width : COLLAPSED_SIDEBAR.width,
+                width: `calc(100% - ${isExpanded ? EXPANDED_SIDEBAR.width : COLLAPSED_SIDEBAR.width})`,
+                left: isExpanded ? EXPANDED_SIDEBAR.width : COLLAPSED_SIDEBAR.width,
                 top: NAVBAR.height
             }}
               className={`${themeClass} relative`}>
