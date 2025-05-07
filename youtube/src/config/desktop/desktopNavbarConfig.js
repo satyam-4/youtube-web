@@ -6,9 +6,6 @@ import { NotificationsOutlined, Notifications } from "../../components/icons/Not
 import defaultAvatar from "../../assets/images/avatars/defaultAvatar.svg"
 import ClearIcon from '@mui/icons-material/Clear'
 import { SearchIcon } from "../../components/icons/SearchIcon.jsx"
-import getTheme from "../../services/theme/getTheme.js"
-
-const theme = getTheme()
 
 export const DESKTOP_NAVBAR_CONFIG = {
     logo: {
@@ -25,7 +22,6 @@ export const DESKTOP_NAVBAR_CONFIG = {
             className: `
             h-full px-2 rounded-l-3xl outline-none border border-transparent focus:border-sky-700
             w-[82%] lg:w-[90%] md:px-5  
-            ${theme === "light" ? "bg-white" : "bg-dark"}
             `
         },
         buttons: {
@@ -47,7 +43,7 @@ export const DESKTOP_NAVBAR_CONFIG = {
                 id: "mic",
                 type: "button",
                 icon: () => React.createElement(MicIcon),
-                className: "p-2 rounded-full bg-lightGray",
+                className: "p-2 rounded-full",
                 action: () => console.log("mic button is clicked")
             }
         }
@@ -60,7 +56,7 @@ export const DESKTOP_NAVBAR_CONFIG = {
                 label: "Create",
                 activeIcon: () => React.createElement(AddIcon),
                 inactiveIcon: () => React.createElement(AddIcon),
-                className: "px-[14px] py-[7px] bg-lightGray rounded-3xl flex justify-center items-center gap-0.5",
+                className: "px-[14px] py-[7px] rounded-3xl flex justify-center items-center gap-0.5",
                 action: () => console.log("create clicked")
             },
             {
