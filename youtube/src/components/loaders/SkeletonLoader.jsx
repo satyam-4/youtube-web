@@ -1,17 +1,13 @@
 import React from "react"
-import { useSelector } from "react-redux"
-import getTheme from "../../services/theme/getTheme"
+import { useTheme } from "@contexts/ThemeContext"
 
 const SkeletonLoader = () => {
-    const youtubeSidebarState = useSelector((state) => state.sidebar.isExpanded)
-    const theme = getTheme()
+    const { theme } = useTheme()
     const bgClass = theme === "light"? "bg-zinc-200" : "bg-zinc-800"
-    const containerWidth = "w-[95vw] md:w-[43vw] lg:w-[29vw]"
-    const xlContainerWidth = youtubeSidebarState ? "xl:w-[27vw]" : "xl:w-[22.5vw]"
 
     return (
         <>
-            <div className={`${containerWidth} ${xlContainerWidth}`}>
+            <div>
                 <div className={`
                     mx-auto rounded-lg
                     ${bgClass}
