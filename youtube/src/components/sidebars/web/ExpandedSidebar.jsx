@@ -1,20 +1,16 @@
-import React, { useState } from "react"
-import { NavLink } from "react-router-dom"
-import { toggleYoutubeSidebar } from "../../../features/sidebar/sidebarSlice"
-
+import React from "react"
 import { EXPANDED_SIDEBAR_CONFIG } from "../../../config/desktop/sidebarConfig/ExpandedSidebarConfig.js"
 import ExpandedSidebarItem from "./sidebarItems/ExpandedSidebarItem.jsx"
 import { EXPANDED_SIDEBAR } from "../../../constants/styles/constants.js"
 import { MenuIcon } from "../../icons/MenuIcon.jsx"
-import { useDispatch, useSelector } from "react-redux"
+import { useSidebar } from "@contexts/SidebarContext.jsx"
 
 const ExpandedSidebar = () => {
-    const dispatch = useDispatch()
-    const [authState, setAuthState] = useState(true)
+    const { toggleSidebarState } = useSidebar()
 
     const handleMenuClick = (action) => {
         if(action === "TOGGLE_SIDEBAR") {
-            dispatch(toggleYoutubeSidebar())
+            toggleSidebarState()
         }
     }
 
@@ -23,7 +19,7 @@ const ExpandedSidebar = () => {
             sidebarSections.id === "header" 
             ?  (
                 <div className="w-full h-[65px] flex">
-                    <div className="w-[90px] h-full flex justify-center items-center">
+                    <div className="w-[70px] h-full flex justify-center items-center">
                         <button 
                         onClick={() => handleMenuClick(sidebarSections.options.menu.action)}
                         className="">
@@ -42,16 +38,20 @@ const ExpandedSidebar = () => {
                 sidebarSections.id === "subscriptions" 
                 ? (
                     <>
-                        <h1 className="text-xl font-bold">
+                        <h1 className="pl-[20px] text-xl font-bold">
                             {
                                 sidebarSections.title
                             }
                         </h1>
                         {
                             sidebarSections.subscriptions.map((channel) => (
-                                <div className="bg-green-400 flex items-center">
-                                    <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                                    <span>
+                                <div className="my-2 flex items-center">
+                                    <div className="w-[70px] flex items-center justify-center">
+                                        <div 
+                                        style={{ backgroundColor: `rgb(${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)}, ${Math.floor(Math.random()*256)})`}}
+                                        className={`w-6 h-6 rounded-full`}></div>
+                                    </div>
+                                    <span className="font-semibold">
                                         {
                                             channel.channelName
                                         }
@@ -276,7 +276,7 @@ const ExpandedSidebar = () => {
             </div> */}
             <div 
             style={{ width: EXPANDED_SIDEBAR.width, height: EXPANDED_SIDEBAR.height }}
-            className="bg-black transition-all duration-300">
+            className="transition-all duration-300">
                 <ul>
                     {
                         renderSidebarItems()
