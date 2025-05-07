@@ -3,8 +3,8 @@ import { DESKTOP_NAVBAR_CONFIG } from "../../../config/desktop/desktopNavbarConf
 import { useEffect, useMemo, useRef, useState } from "react"
 import { NAVBAR } from "../../../constants/styles/constants.js"
 import { createHandlers } from "../../../utils/handlers/navbarHandlers.js"
-import ProfileMenu from "../../popups/ProfileMenu.jsx"
-import { useTheme } from "../../../contexts/ThemeContext.jsx"
+import { useTheme } from "@contexts/ThemeContext.jsx"
+import ProfileMenu from "../../menu/ProfileMenu.jsx"
 
 const DesktopNavbar = () => {
     const [authState, setAuthState] = useState(true)
@@ -16,8 +16,6 @@ const DesktopNavbar = () => {
     const profileButtonRef = useRef(null)
 
     const { theme } = useTheme()
-    
-    const searchBarHeight = "43px"
 
     const renderSearchBar = () => (
         <div className={`
@@ -25,7 +23,7 @@ const DesktopNavbar = () => {
             md:flex items-center w-[45vw] lg:w-[50vw] gap-2
         `}>
             <div className={`
-                relative p-[1px] mx-auto w-full h-[${searchBarHeight}] flex items-center rounded-3xl overflow-hidden
+                relative p-[1px] mx-auto w-full h-[43px] flex items-center rounded-3xl overflow-hidden
                 ${theme === "light" ? 'bg-[#dad9d982]' : 'bg-[#39393982]'}
             `}>
                 <input 
@@ -179,8 +177,8 @@ const DesktopNavbar = () => {
                 <Link
                 to={DESKTOP_NAVBAR_CONFIG.logo.link}>
                     <img
-                    src={theme === "light" ? DESKTOP_NAVBAR_CONFIG.logo.light : DESKTOP_NAVBAR_CONFIG.logo.dark}
                     className="size-[6rem]"
+                    src={theme === "light" ? DESKTOP_NAVBAR_CONFIG.logo.light : DESKTOP_NAVBAR_CONFIG.logo.dark}
                     alt={DESKTOP_NAVBAR_CONFIG.logo.alt} />
                 </Link>
                 <div>
