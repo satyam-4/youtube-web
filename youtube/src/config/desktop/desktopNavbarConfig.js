@@ -71,12 +71,7 @@ export const DESKTOP_NAVBAR_CONFIG = {
             {
                 id: "profile",
                 type: "button",
-                defaultProfilePic: () => React.createElement("img", {
-                    src: defaultAvatar,
-                    alt: "User profile",
-                    className: "w-8 h-8 rounded-full"
-                }),
-                className: "w-8 h-8 hover:bg-zinc-700 rounded-full",
+                className: "w-9 h-9 rounded-full",
                 action: "TOGGLE_USER_MENU_STATE"
             }
         ]
@@ -86,7 +81,7 @@ export const DESKTOP_NAVBAR_CONFIG = {
             {
                 id: "signIn",
                 type: "component",
-                signIn: () => React.createElement(SignIn)
+                signIn: (path) => React.createElement(SignIn, {currentPath: path})
             }
         ]
     }
