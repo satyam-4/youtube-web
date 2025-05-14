@@ -5,9 +5,16 @@ import { NAVBAR } from "../../../constants/styles/constants.js"
 import { createHandlers } from "../../../utils/handlers/navbarHandlers.js"
 import { useTheme } from "@contexts/ThemeContext.jsx"
 import ProfileMenu from "../../menu/ProfileMenu.jsx"
+import { useSelector } from "react-redux"
+import { getColorFromName } from "../../../utils/helpers/getAvatarColor.js"
+import { useLocation } from "react-router-dom"
 
 const DesktopNavbar = () => {
-    const [authState, setAuthState] = useState(true)
+    const user = useSelector((state) => state.user.data)
+
+    const location = useLocation()
+
+    const [authState, setAuthState] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
     const [search, setSearch] = useState("")
     
@@ -79,7 +86,11 @@ const DesktopNavbar = () => {
                         { 
                             button.id === "profile"
                             ? (
-                                button.defaultProfilePic()
+                                <div
+                                style={{ backgroundColor: getColorFromName(user?.username || "") }}
+                                className="w-full h-full rounded-full text-xl flex justify-center items-center font-semibold">
+                                { user?.username.charAt(0).toUpperCase() }
+                                </div>
                             ) 
                             : (
                                 button.activeIcon()
@@ -103,17 +114,16 @@ const DesktopNavbar = () => {
                 )
             })
         } else {
-            DESKTOP_NAVBAR_CONFIG.unauthenticated.buttons.map((button) => {
-                return (
+            return DESKTOP_NAVBAR_CONFIG.unauthenticated.buttons.map((button) => (
                     button.type === "component" 
                     ? (
-                        button.signIn
+                        button.signIn(location.pathname)
                     )
                     : (
                         ''
                     )
                 )
-            })
+            )
         }
     }
 
