@@ -11,9 +11,9 @@ const DesktopMainLayout = () => {
     const { isExpanded } = useSidebar()
 
     const themeClass = theme === "light" ? 'bg-white text-black' : 'bg-black text-white'
-    console.log("sidebar state:", isExpanded)
+
     return (
-        <div className={`${theme === "light" ? 'bg-white text-black' : 'bg-black text-white'} relative flex h-screen`}>
+        <div className={`relative ${theme === "light" ? 'bg-white text-black' : 'bg-dark text-white'} flex`}>
             {
                 isExpanded
                 ? (
@@ -32,9 +32,9 @@ const DesktopMainLayout = () => {
                 )
             }
 
-            <div className="w-screen relative">
+            <div className="w-full relative">
               <div 
-              style={{ width: NAVBAR.width, left: COLLAPSED_SIDEBAR.width }}
+              style={{ width: `calc(100% - ${COLLAPSED_SIDEBAR.width})`, left: COLLAPSED_SIDEBAR.width }}
               className={`${themeClass} fixed z-20`}>
                   <DesktopNavbar />
               </div>
