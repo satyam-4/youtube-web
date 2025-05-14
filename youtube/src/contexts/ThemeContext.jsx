@@ -3,14 +3,15 @@ import { useState, createContext, useContext } from "react"
 const ThemeContext = createContext()
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState((window.matchMedia("(prefers-color-scheme)").matches ? "dark" : "light"))
+    const [theme, setTheme] = useState(localStorage.getItem("theme") || (window.matchMedia("(prefers-color-scheme)").matches ? "dark" : "light"))
 
-    const toggleTheme = () => {
-        setTheme((prev) => prev === "light" ? "dark" : "light")
+    const updateTheme = (theme) => {
+        setTheme(theme)
+        localStorage.setItem("theme", theme)
     }
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme, updateTheme }}>
             {children}
         </ThemeContext.Provider>
     )
